@@ -1,0 +1,24 @@
+---
+title: "PL_Strikers_Performance_Analysis using HTML and JSON Data"
+author: "Pascal Hermann Kouogang Tafo"
+format: html
+editor: visual
+---
+
+## INTRODUCTION
+
+This assignment demonstrates how to manually create structured data files in **HTML** and **JSON** formats, then load them into R data frames, and rigorously compare whether both sources yield **identical** data.In order to implement it, i chose to investigate the evolution of striker performance metrics in the Premier League since 2020 through a comparative analysis of 3 selected sports analytics literature. By integrating data from both formats, my goal is to determine how modern finishing efficiency influences a club's overall league standing and point acquisition.
+
+## APPROACH
+
+We will design a structured data science approach to accomplish our goal using the following steps.
+
+1)  **Identify three literatures about soccer** published since 2020 and the ones i chose are *The Expected Goals Philosophy*, *Net Gains*, and *Soccer Analytics*.
+
+2)  **Manually compile and structure the books' data** in two separate formats: an **HTML and a JSON files** representing the same data.
+
+3)  **Load both HTML and JSON data** into two separate R data frame using **"rvest" and "jsonlite"** packages.
+
+4)  **Perform a logical comparison** to ensure the information remained identical across both architectures.
+
+5)  **Perform an Exploratory Data Analysis** about Premier League strikers performance for the season 2024-2025. with the goal of finding the relationship between individual Premier League striker performance and club-level outcomes across combining traditional goal-scoring metrics with advanced statistics
