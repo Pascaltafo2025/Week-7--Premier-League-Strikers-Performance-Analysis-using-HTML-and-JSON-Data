@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Striker Performance Analysis – Premier League Books</title>
+  <style>
+    /* ── Reset & base ───────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Segoe UI', Arial, sans-serif;
+      background: #0d1117;
+      color: #e6edf3;
+      min-height: 100vh;
+      padding: 40px 20px 60px;
+    }
+
+    /* ── Header ─────────────────────────────────── */
+    header {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+    header .badge {
+      display: inline-block;
+      background: #38003c;
+      color: #00ff87;
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      padding: 4px 14px;
+      border-radius: 20px;
+      margin-bottom: 14px;
+    }
+    header h1 {
+      font-size: 2rem;
+      font-weight: 800;
+      line-height: 1.2;
+      background: linear-gradient(90deg, #00ff87, #60efff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 8px;
+    }
+    header p {
+      color: #8b949e;
+      font-size: 0.95rem;
+    }
+
+    /* ── Table wrapper ───────────────────────────── */
+    .table-wrap {
+      max-width: 1100px;
+      margin: 0 auto;
+      overflow-x: auto;
+      border-radius: 12px;
+      box-shadow: 0 0 40px rgba(0,255,135,0.07);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: #161b22;
+      font-size: 0.93rem;
+    }
+
+    /* ── Table header ────────────────────────────── */
+    thead tr {
+      background: #38003c;
+    }
+    thead th {
+      padding: 14px 18px;
+      text-align: left;
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: #00ff87;
+      white-space: nowrap;
+      border-bottom: 2px solid #00ff8722;
+    }
+
+    /* ── Table body ──────────────────────────────── */
+    tbody tr {
+      border-bottom: 1px solid #21262d;
+      transition: background 0.15s;
+    }
+    tbody tr:hover { background: #1c2128; }
+    tbody tr:last-child { border-bottom: none; }
+
+    td {
+      padding: 16px 18px;
+      vertical-align: top;
+      color: #c9d1d9;
+      line-height: 1.5;
+    }
+
+    /* ── Column-specific styles ──────────────────── */
+    td.title {
+      font-weight: 700;
+      color: #e6edf3;
+      min-width: 220px;
+    }
+    td.authors {
+      min-width: 180px;
+      color: #8b949e;
+      font-size: 0.88rem;
+    }
+    td.year {
+      text-align: center;
+      font-weight: 600;
+      color: #60efff;
+      white-space: nowrap;
+    }
+    td.genre {
+      min-width: 140px;
+    }
+    .genre-pill {
+      display: inline-block;
+      background: #0d419d22;
+      border: 1px solid #1f6feb;
+      color: #79c0ff;
+      font-size: 0.78rem;
+      font-weight: 600;
+      padding: 3px 10px;
+      border-radius: 20px;
+    }
+    td.rating {
+      text-align: center;
+      white-space: nowrap;
+    }
+    .stars { color: #f0b429; font-size: 1rem; letter-spacing: 1px; }
+    .rating-num {
+      display: block;
+      font-size: 0.78rem;
+      color: #8b949e;
+      margin-top: 2px;
+    }
+
+    /* ── Multi-author highlight ──────────────────── */
+    tr.multi-author td.authors {
+      color: #00ff87;
+      font-weight: 600;
+    }
+    tr.multi-author td.authors::before {
+      content: "👥 ";
+      font-size: 0.85rem;
+    }
+
+    /* ── Footer note ─────────────────────────────── */
+    .footnote {
+      text-align: center;
+      margin-top: 28px;
+      font-size: 0.8rem;
+      color: #484f58;
+    }
+    .footnote span { color: #00ff87; }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="badge">⚽ Premier League Analytics</div>
+    <h1>Striker Performance Analysis<br>Recommended Reading List</h1>
+    <p>Three essential books on data-driven striker analysis in the Premier League since 2020</p>
+  </header>
+
+  <div class="table-wrap">
+    <table id="books-table">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Title</th>
+          <th>Author(s)</th>
+          <th>Year</th>
+          <th>Genre</th>
+          <th>Rating</th>
+        </tr>
+      </thead>
+      <tbody>
+
+        <tr>
+          <td>1</td>
+          <td class="title">Football Hackers: The Science and Art of a Data Revolution</td>
+          <td class="authors">Christoph Biermann</td>
+          <td class="year">2020</td>
+          <td class="genre"><span class="genre-pill">Sports Analytics</span></td>
+          <td class="rating">
+            <div class="stars">★★★★★</div>
+            <span class="rating-num">4.6 / 5.0</span>
+          </td>
+        </tr>
+
+        <tr class="multi-author">
+          <td>2</td>
+          <td class="title">The Expected Goals Philosophy: A Game-Changing Way of Analysing Football</td>
+          <td class="authors">James Tippett, Ravi Ramineni &amp; Ashwin Raman</td>
+          <td class="year">2021</td>
+          <td class="genre"><span class="genre-pill">Statistical Analysis</span></td>
+          <td class="rating">
+            <div class="stars">★★★★☆</div>
+            <span class="rating-num">4.3 / 5.0</span>
+          </td>
+        </tr>
+
+        <tr>
+          <td>3</td>
+          <td class="title">Soccermatics: Mathematical Adventures in the Beautiful Game</td>
+          <td class="authors">David Sumpter</td>
+          <td class="year">2022</td>
+          <td class="genre"><span class="genre-pill">Mathematical Modelling</span></td>
+          <td class="rating">
+            <div class="stars">★★★★★</div>
+            <span class="rating-num">4.5 / 5.0</span>
+          </td>
+        </tr>
+
+      </tbody>
+    </table>
+  </div>
+
+  <p class="footnote">
+    <span>👥</span> Row highlighted in green = multiple authors &nbsp;|&nbsp;
+    Ratings reflect community aggregates from football analytics communities
+  </p>
+
+</body>
+</html>
