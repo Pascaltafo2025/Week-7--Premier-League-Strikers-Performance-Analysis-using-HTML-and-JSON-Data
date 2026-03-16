@@ -1,0 +1,43 @@
+{
+  "dataset": {
+    "title": "Premier League Striker Analytics — Reference Books",
+    "description": "Manually curated list of books relevant to football data science, xG modelling, and mathematical analysis of the game.",
+    "created": "2025-03-15",
+    "total_books": 3
+  },
+  "books": [
+    {
+      "id": 1,
+      "title": "Football Hackers: The Science and Art of a Data Revolution",
+      "authors": "Christoph Biermann",
+      "multiple_authors": false,
+      "year": 2020,
+      "genre": "Sports Analytics",
+      "rating_stars": 5,
+      "rating_numeric": 4.6,
+      "rating_max": 5.0
+    },
+    {
+      "id": 2,
+      "title": "The Expected Goals Philosophy: A Game-Changing Way of Analysing Football",
+      "authors": "James Tippett", "Ravi Ramineni", "Ashwin Raman",
+      "multiple_authors": true,
+      "year": 2021,
+      "genre": "Statistical Analysis",
+      "rating_stars": 4,
+      "rating_numeric": 4.3,
+      "rating_max": 5.0
+    },
+    {
+      "id": 3,
+      "title": "Soccermatics: Mathematical Adventures in the Beautiful Game",
+      "authors": "David Sumpter",
+      "multiple_authors": false,
+      "year": 2022,
+      "genre": "Mathematical Modelling",
+      "rating_stars": 5,
+      "rating_numeric": 4.5,
+      "rating_max": 5.0
+    }
+  ]
+}
