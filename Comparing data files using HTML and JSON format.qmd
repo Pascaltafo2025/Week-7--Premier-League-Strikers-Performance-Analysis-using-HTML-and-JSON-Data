@@ -1,0 +1,274 @@
+---
+title: " Comparing data files using HTML and JSON format"
+author: "Pascal Hermann Kouogang Tafo"
+format: html
+editor: visual
+---
+
+## INTRODUCTION
+
+This assignment demonstrates how to manually create structured data files in **HTML** and **JSON** formats, then load them into R data frames, and rigorously compare whether both sources yield **identical** data.In order to implement it, i chose to investigate the evolution of striker performance metrics in the Premier League since 2020 through a comparative analysis of 3 selected sports analytics literature.
+
+------------------------------------------------------------------------
+
+## APPROACH
+
+We will design a structured data science approach to accomplish our goal using the following steps.
+
+1)  **Identify three litteratures about soccer** published since 2020 and the ones i chose are *Football Hackers (2020)*, *The Expected Goals Philosophy (2021)*, and *Soccermatics (2022)*.
+
+2)  **Manually compile and structure the books' data** in two separate formats: an **HTML and a JSON files** representing the same data.
+
+3)  **Load both HTML and JSON data** into two separate R data frame using **"rvest" and "jsonlite"** packages.
+
+4)  **Perform a logical comparison** to ensure the information remained identical across both architectures.
+
+------------------------------------------------------------------------
+
+## LOADING USEFUL LIBRARIES
+
+```{r load-libraries}
+
+library(rvest)       # HTML parsing
+library(jsonlite)    # JSON parsing
+library(dplyr)       # Data manipulation
+library(tibble)      # Modern data frames
+library(knitr)       # Table rendering
+
+```
+
+## BOOKS SELECTIONS
+
+I chose these three books because they represent the evolution of data-driven soccer analysis, with direct relevance to striker performance metrics used in the Premier League post-2020.
+
+-   **Football Hackers (2020)** — Biermann chronicles the global data revolution inside football clubs, with extensive coverage of expected goals (xG) and striker evaluation metrics pioneered by clubs like Liverpool and Brentford. The updated 2020 edition incorporates post-2018 Premier League data.
+
+-   **The Expected Goals Philosophy (2021)** — This multi-author work provides the most rigorous statistical treatment of xG as a striker evaluation tool. Tippett, Ramineni, and Raman break down shot quality, positional play, and finishing efficiency across Premier League seasons.
+
+-   **Soccermatics (2022)** — Sumpter's updated edition applies mathematical modelling (network theory, Markov chains, Poisson models) to explain how Premier League strikers create and convert chances, making it essential reading for analytically-minded practitioners.
+
+------------------------------------------------------------------------
+
+## Let's manually create an HTML and JSON files containing a table with the books data.
+
+### Let's start by creating an HTML format
+
+Since i am not comfortable with this format, i requested the help of LLMs to manually create the data files. Here is the prompt that was used: **Used this table to manually create an HTML file** Below is the table that i provided:
+
+------------------------------------------------------------------------
+
+1)  Result from **Claude Sonnet 4.6**
+
+The HTML file was hand-crafted with a semantic `<table>` element. Key structural decisions:
+
+```         
+books.html
+├── <thead>          → Column labels (title, authors, year, genre, rating)
+├── <tbody>          → One <tr> per book
+│   ├── <td id="1"> → Football Hackers
+│   ├── <td id="2"> → Expected Goals Philosophy  ← multi-author row
+│   └── <td id="3"> → Soccermatics
+└── Styling          → CSS for Premier League visual identity
+```
+
+The multi-author book (Book 2) is marked with `class="multi-author"` for visual distinction.
+
+------------------------------------------------------------------------
+
+2)  Result from **Gemini 3**
+
+\<!DOCTYPE html\>
+
+<html>
+
+**Soccer Analytics Books Selected**
+
+| ID | Title | Author(s) | Year | Genre | Rating |
+|------------|------------|------------|------------|------------|------------|
+| 1 | Football Hackers: The Science and Art of a Data Revolution | Christoph Biermann | 2020 | Sports Analytics | 4.6 / 5.0 |
+| 2 | The Expected Goals Philosophy | James Tippett, Ravi Ramineni & Ashwin Raman | 2021 | Statistical Analysis | 4.3 / 5.0 |
+| 3 | Soccermatics: Mathematical Adventures in the Beautiful Game | David Sumpter | 2022 | Mathematical Modelling | 4.5 / 5.0 |
+
+</html>
+
+------------------------------------------------------------------------
+
+### Let's start by creating a JSON format
+
+I am not comfortable with this format, i requested the help of LLMs to manually create the data files. with same the prompt used earlier by changing the format.
+
+1)  Result from **Claude Sonnet 4.6**
+
+The JSON file follows a two-level structure:
+
+**a) Structure**
+
+``` json
+{
+  "dataset": { metadata object },
+  "books":   [ array of book objects ]
+}
+```
+
+Each book object contains: `id`, `title`, `authors`, `multiple_authors` (boolean), `year`, `genre`, `rating`.
+
+**b) contruction data file**
+
+``` json
+{ 
+   "dataset": { "title": "Soccer Analytics Books Selected", "description": "Manually curated list of books relevant to football data science, xG modelling, and mathematical analysis of the game.","created": "2025-03-15", "total_books": 3 }, 
+   "books": \[ { "id": 1, "title": "The Expected Goals Philosophy", "authors": \["James Tippett"\], "multiple_authors": false, "year": 2020, "genre": "Sports Analytics", "rating_numeric": 4.4, "rating_max": 5.0 }, { "id": 2, "title": "Net Gains", "authors": \["Ryan O'Hanlon"\], "multiple_authors": false, "year": 2022, "genre": "Sports Science", "rating_numeric": 4.2, "rating_max": 5.0 }, { "id": 3, "title": "Soccer Analytics: An Introduction Using R", "authors": \["Clive Beggs"\], "multiple_authors": false, "year": 2024, "genre": "Data Science", "rating_numeric": 4.5, "rating_max": 5.0 } \] 
+}
+```
+
+2)  Result from **Gemini 3**
+
+{ "books_selected":\[ { "id": 1, "title": "Football Hackers: The Science and Art of a Data Revolution", "authors": "Christoph Biermann", "year": 2020, "genre": "Sports Analytics", "rating": 4.6 }, { "id": 2, "title": "The Expected Goals Philosophy: A Game-Changing Way of Analysing Football", "authors": "James Tippett, Ravi Ramineni & Ashwin Raman", "year": 2021, "genre": "Statistical Analysis", "rating": 4.3 }, { "id": 3, "title": "Soccermatics: Mathematical Adventures in the Beautiful Game", "authors": "David Sumpter", "year": 2022, "genre": "Mathematical Modelling", "rating": 4.5 }\] } ------------------------------------------------------------------------
+
+## Let's Load the HTML data into an R data frame
+
+```{r html-format}
+
+# Read the HTML file 
+
+html_url <- "https://raw.githubusercontent.com/Pascaltafo2025/Week-7--Premier-League-Strikers-Performance-Analysis-using-HTML-and-JSON-Data/refs/heads/main/books.html"
+
+Books_html_raw <- read_html(html_url)
+
+# Extract the <table> and parse into a data frame
+
+df_books_html <- Books_html_raw |>
+  html_element("table#books-table") |>   # target the specific table by id
+  html_table(trim = TRUE)                 # trim whitespace automatically
+
+df_books_html
+
+
+```
+
+------------------------------------------------------------------------
+
+## Let's Load the JSON data into a separate R data frame
+
+```{r load-json}
+
+# ── Read the JSON file ─────────────────────────────────────────────────────────
+
+json_url <- "https://raw.githubusercontent.com/Pascaltafo2025/Week-7--Premier-League-Strikers-Performance-Analysis-using-HTML-and-JSON-Data/refs/heads/main/books.json"
+
+Books_json <- fromJSON(json_url)
+
+Books_json
+
+# ── The books array sits under json_raw$books ─────────────────────────────────
+cat("JSON top-level keys:", paste(names(Books_json), collapse = ", "), "\n")
+cat("Dataset metadata:\n")
+str(Books_json$dataset)
+
+```
+
+------------------------------------------------------------------------
+
+## Compare the two data frames and determine whether they are identical
+
+In this step, i used the help of **Claude Sonnet 4.6** to show me how to compare two dataframes from an HTML and JSON data files format.
+
+a)  First, we need to clean both data frames and rename their column so that they could match and facilitate to comparison.
+
+-   **Let's clean the HTML data frame**
+
+```{r clean-html}
+
+# ── Clean and rename to match JSON schema ────────────────────────────────────
+
+df_Books_html_Clean <- df_books_html |>
+  select(-1) |>                            # drop the row-number column "#"
+  rename(
+    title   = `Title`,
+    authors = `Author(s)`,
+    year    = `Year`,
+    genre   = `Genre`,
+    rating  = `Rating`
+  ) |>
+  mutate(
+    # Rating column in HTML contains "★★★★★\n4.6 / 5.0" — extract numeric
+    rating = as.numeric(
+      sub(".*(\\d\\.\\d)\\s*/\\s*5\\.0.*", "\\1", rating)
+    ),
+    year   = as.integer(year)
+  ) |>
+  as_tibble()
+
+df_Books_html_Clean
+```
+
+-   **Let's clean the JSON data frame**
+
+```{r clean-json}
+
+# Extract and tidy the books data frame 
+
+df_Books_json_clean <- Books_json$books |>
+  as_tibble() |>
+  select(title, authors, year, genre, rating_numeric) |>  # keep same cols as HTML df
+  mutate(
+    year   = as.integer(year),
+    rating_numeric = as.numeric(rating_numeric)
+  )
+
+df_Books_json_clean
+```
+
+------------------------------------------------------------------------
+
+b)  Let's compare both data frame.
+
+We will proceed at a definitive test to find the degree of similarity. This technique consists of sorting the table by title to allow an ordered comparison differences and then using the 'identical' function to test our result.
+
+```{r compare-identical}
+
+# Sort both by title to neutralize any ordering differences
+
+df_html_sorted <- df_Books_html_Clean |> arrange(title)
+df_json_sorted <- df_Books_json_clean |> arrange(title)
+
+test_result <- identical(df_html_sorted, df_json_sorted)
+
+test_result
+
+```
+
+### Interpretation:
+
+The result of our comparison is False which means the elements of two dataframe are identical when compare to each by their position. In that case, let's further our analysis by comparing their structure.
+
+------------------------------------------------------------------------
+
+### Comparing their Structure
+
+```{r compare-structure}
+
+cat("── Dimensions ──────────────────────────────\n")
+cat("HTML:", nrow(df_Books_html_Clean), "rows,", ncol(df_Books_html_Clean), "cols\n")
+cat("JSON:", nrow(df_Books_json_clean), "rows,", ncol(df_Books_json_clean), "cols\n")
+
+cat("\n── Column names ────────────────────────────\n")
+cat("HTML cols:", paste(names(df_Books_html_Clean), collapse = ", "), "\n")
+cat("JSON cols:", paste(names(df_Books_json_clean), collapse = ", "), "\n")
+
+cat("\n── Column types ────────────────────────────\n")
+cat("HTML:\n"); print(sapply(df_Books_html_Clean, class))
+cat("JSON:\n"); print(sapply(df_Books_json_clean, class))
+```
+
+### Interpretation:
+
+This comparison result shows that both data frame have the same dimension. However, their columns names and types are not identical. In fact, the HTML Data frame fifth column is named "rating" whereas the JSON fifth column is "rating_numeric". The same difference is observed on the columns types where the author column types in the HTML Data frame is a "Character" whereas it is a "list" in the JSON Data frame.
+
+------------------------------------------------------------------------
+
+## CONCLUSION
+
+The two HTML and JSON data files that were constructed manually represent the same three books on the soccer data analytics. The **`rvest`** function successfully parsed the HTML `<table>` into a clean R data frame and the **`jsonlite`** parsed the nested JSON structure with zero extra cleaning needed but to a tidy version. Finally, i compare both data frames using the "identical" function in R and the result of the comparison was "False". This result shows that the two data files that were constructed manually are not identical. A further analysis for this assignment could rely on searching a way to either construct the data files or clean them in a manner of making them identical.
+
+------------------------------------------------------------------------
